@@ -26,7 +26,7 @@ class Clientes(models.Model):
     data_nascimento = models.DateField()
     cpf = models.CharField(max_length=14, unique=True)
     email = models.CharField()
-    telefone = models.CharField(null=True)
+    telefone = models.CharField()
     senha = models.CharField(blank=True)
 
     class Meta:
