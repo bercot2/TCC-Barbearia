@@ -20,3 +20,14 @@ class ContatoFuncionario(models.Model):
 
     class Meta:
         db_table = 'contato_funcionario'
+
+class Clientes(models.Model):
+    nome = models.CharField()
+    data_nascimento = models.DateField()
+    cpf = models.CharField(max_length=14, unique=True)
+    email = models.CharField()
+    telefone = models.CharField(null=True)
+    senha = models.CharField()
+
+    class Meta:
+        db_table = 'clientes'
