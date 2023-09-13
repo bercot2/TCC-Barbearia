@@ -11,7 +11,6 @@ router.register('contatoFuncionario', views.ContatoFuncionarioViewSet)
 
 # Clientes
 router.register('clientes', views.ClientesViewSet)
-# router.register('clientes/validar-senha/', views.ClientesViewSet.as_view({'post': 'validar_senha'}), name='validar_senha')
 
 urlpatterns = [
     path('clientes/validar-senha/', views.ClientesViewSet.as_view({'post': 'validar_senha'}), name='validar_senha'),

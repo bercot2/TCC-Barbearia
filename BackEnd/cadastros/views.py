@@ -41,8 +41,8 @@ class ClientesViewSet(viewsets.ModelViewSet):
                 senha_correta = check_password(senha, senha_criptografada)
 
                 if senha_correta:
-                    return Response({'mensagem': 'A senha é correta.'}, status=status.HTTP_200_OK)
+                    return Response({'mensagem': 'Autenticação OK'}, status=status.HTTP_200_OK)
                 else:
-                    return Response({'mensagem': 'A senha é incorreta.'}, status=status.HTTP_401_UNAUTHORIZED)
+                    return Response({'mensagem': 'Senha incorreta.'}, status=status.HTTP_401_UNAUTHORIZED)
         else:
             return Response({'mensagem': 'Usuário não encontrado!'}, status=status.HTTP_400_BAD_REQUEST)
