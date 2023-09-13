@@ -27,7 +27,7 @@ class Clientes(models.Model):
     cpf = models.CharField(max_length=14, unique=True)
     email = models.CharField()
     telefone = models.CharField(null=True)
-    senha = models.CharField()
+    senha = models.CharField(blank=True)
 
     class Meta:
         db_table = 'clientes'
