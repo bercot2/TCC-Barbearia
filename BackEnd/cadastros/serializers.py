@@ -51,7 +51,7 @@ class ClientesSerializer(serializers.ModelSerializer):
         validators = [
             UniqueTogetherValidator(
                 queryset=models.Clientes.objects.all(),
-                fields=['cpf'],
+                fields=['cpf', 'email'],
                 message="Já existe funcionário com este CPF cadastrado!"
             )
         ]
