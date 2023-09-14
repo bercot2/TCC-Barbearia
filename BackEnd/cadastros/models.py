@@ -35,6 +35,7 @@ class Clientes(models.Model):
 class Servico(models.Model):
     descricao = models.CharField()
     valor = models.FloatField()
+    e_ativo = models.BooleanField()
 
     class Meta:
         db_table = 'servico'
@@ -52,7 +53,7 @@ class Agendamentos(models.Model):
 class ServicosAgendamento(models.Model):
 
     id_agendamento = models.ForeignKey(Agendamentos, on_delete=models.CASCADE, db_column="id_agendamento", related_name="servicos_agendamento_agendamento")
-    id_servico = models.ForeignKey(Servico, on_delete=models.CASCADE, db_column="id_servico", related_name="servicos_agendamento_servico")
+    id_servico = models.ForeignKey(Servico, on_delete=models.DO_NOTHING, db_column="id_servico", related_name="servicos_agendamento_servico")
 
     class Meta:
         db_table = 'servicos_agendamento'
