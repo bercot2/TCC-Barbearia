@@ -31,3 +31,20 @@ class Clientes(models.Model):
 
     class Meta:
         db_table = 'clientes'
+
+class Servico(models.Model):
+    descricao = models.CharField()
+    valor = models.FloatField()
+
+    class Meta:
+        db_table = 'servico'
+
+class Agendamentos(models.Model):
+
+    data_hora_agendamento = models.DateField()
+
+    id_cliente = models.ForeignKey(Clientes, on_delete=models.CASCADE, db_column="id_cliente", related_name="cliente_agendamento")
+    id_funcionario = models.ForeignKey(Funcionarios, on_delete=models.CASCADE, db_column="id_funcionario", related_name="funcionario_agendamento")
+
+    class Meta:
+        db_table = 'agendamentos'

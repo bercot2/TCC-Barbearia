@@ -55,3 +55,16 @@ class ClientesSerializer(serializers.ModelSerializer):
                 message="Já existe funcionário com este CPF cadastrado!"
             )
         ]
+
+class ServicoSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = models.Servico
+        fields = "__all__"
+
+
+class AgendamentoSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = models.Agendamentos
+        fields = "__all__"

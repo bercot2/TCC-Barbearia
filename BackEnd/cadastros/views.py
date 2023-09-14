@@ -4,11 +4,11 @@ from datetime import datetime
 from django.contrib.auth.hashers import check_password
 from django.db.models import Q
 from rest_framework import status
-from rest_framework import viewsets
+from rest_framework import viewsets, filters
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.decorators import api_view, action
 from rest_framework.response import Response
-from rest_framework.mixins import CreateModelMixin
+from rest_framework.mixins import CreateModelMixin, UpdateModelMixin
 from . import models, serializers
 
 
@@ -17,7 +17,7 @@ class FuncionarioViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.FuncionariosSerializer
 
 
-class ContatoFuncionarioViewSet(viewsets.GenericViewSet, CreateModelMixin):
+class ContatoFuncionarioViewSet(viewsets.GenericViewSet, CreateModelMixin, UpdateModelMixin):
     queryset = models.ContatoFuncionario.objects.all()
     serializer_class = serializers.ContatoFuncionarioSerializer
 
@@ -46,3 +46,12 @@ class ClientesViewSet(viewsets.ModelViewSet):
                     return Response({'mensagem': 'Senha incorreta.'}, status=status.HTTP_401_UNAUTHORIZED)
         else:
             return Response({'mensagem': 'Usuário não encontrado!'}, status=status.HTTP_400_BAD_REQUEST)
+        
+class ServicoViewSet(viewsets.ModelViewSet):
+    queryset = models.Servico.objects.all()
+    serializer_class = serializers.ServicoSerializer
+
+
+class AgendamentoViewSet(viewsets.ModelViewSet):
+    queryset = models.Agendamentos.objects.all()
+    serializer_class = serializers.AgendamentoSerializer
