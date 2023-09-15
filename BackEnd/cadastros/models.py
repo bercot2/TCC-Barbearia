@@ -45,14 +45,7 @@ class Agendamentos(models.Model):
 
     id_cliente = models.ForeignKey(Clientes, on_delete=models.CASCADE, db_column="id_cliente", related_name="cliente_agendamento")
     id_funcionario = models.ForeignKey(Funcionarios, on_delete=models.CASCADE, db_column="id_funcionario", related_name="funcionario_agendamento")
+    id_servico = models.ForeignKey(Servico, on_delete=models.DO_NOTHING, db_column="id_servico", related_name="servicos_agendamento")
 
     class Meta:
         db_table = 'agendamentos'
-
-class ServicosAgendamento(models.Model):
-
-    id_agendamento = models.ForeignKey(Agendamentos, on_delete=models.CASCADE, db_column="id_agendamento", related_name="servicos_agendamento_agendamento")
-    id_servico = models.ForeignKey(Servico, on_delete=models.DO_NOTHING, db_column="id_servico", related_name="servicos_agendamento_servico")
-
-    class Meta:
-        db_table = 'servicos_agendamento'
