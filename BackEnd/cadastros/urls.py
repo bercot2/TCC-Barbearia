@@ -7,7 +7,7 @@ router = routers.DefaultRouter()
 
 # Funcionário
 router.register('funcionarios', views.FuncionarioViewSet)
-router.register('contatoFuncionario', views.ContatoFuncionarioViewSet)
+router.register('contato-funcionario', views.ContatoFuncionarioViewSet)
 
 # Clientes
 router.register('clientes', views.ClientesViewSet)

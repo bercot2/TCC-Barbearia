@@ -4,7 +4,7 @@ from datetime import datetime
 from django.contrib.auth.hashers import check_password
 from django.db.models import Q
 from rest_framework import status
-from rest_framework import viewsets, filters
+from rest_framework import viewsets
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.decorators import api_view, action
 from rest_framework.response import Response
