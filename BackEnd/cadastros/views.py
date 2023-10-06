@@ -56,13 +56,3 @@ class ServicoViewSet(viewsets.ModelViewSet):
 class AgendamentoViewSet(viewsets.ModelViewSet):
     queryset = models.Agendamentos.objects.all()
     serializer_class = serializers.AgendamentoSerializer
-
-    @action(detail=False, methods=['post'])
-    def servico_agendamento(self, request):
-        agendamento = request.data.get("agendamento", None)
-        servico = request.data.get("servico", None)
-
-        if agendamento and servico:
-            ...
-        else:
-            return Response({'mensagem': 'Não foi possível vincular o serviço ao Agendamento'}, status=status.HTTP_400_BAD_REQUEST)
