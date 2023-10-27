@@ -49,3 +49,11 @@ class Agendamentos(models.Model):
 
     class Meta:
         db_table = 'agendamentos'
+
+class Produtos(models.Model):
+
+    descricao = models.CharField()
+    valor = models.FloatField()
+
+    class Meta:
+        db_table = 'produtos'

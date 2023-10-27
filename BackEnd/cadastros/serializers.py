@@ -68,3 +68,9 @@ class AgendamentoSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Agendamentos
         fields = "__all__"
+
+class ProdutosSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = models.Produtos
+        fields = "__all__"

@@ -56,3 +56,8 @@ class ServicoViewSet(viewsets.ModelViewSet):
 class AgendamentoViewSet(viewsets.ModelViewSet):
     queryset = models.Agendamentos.objects.all()
     serializer_class = serializers.AgendamentoSerializer
+
+
+class ProdutosViewSet(viewsets.ModelViewSet):
+    queryset = models.Produtos.objects.all()
+    serializer_class = serializers.ProdutosSerializer
