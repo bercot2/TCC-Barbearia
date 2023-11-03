@@ -1,8 +1,16 @@
+import 'dart:convert';
+
+import 'package:barberapp/src/model/Barber.dart';
+import 'package:barberapp/src/model/Servico.dart';
+import 'package:barberapp/src/model/User.dart';
 import 'package:barberapp/src/screens/SignUp.dart';
+import 'package:barberapp/src/screens/home.dart';
 import 'package:barberapp/src/themes/theme.dart';
 import 'package:barberapp/src/utils/getDeviceInfo.dart';
+import 'package:barberapp/src/widgets/dialog.dart';
 import 'package:barberapp/src/widgets/showLogo.dart';
 import 'package:flutter/material.dart';
+import '../utils/globals.dart' as globals;
 
 class Login extends StatefulWidget {
   LoginState createState() => LoginState();
@@ -102,11 +110,13 @@ class LoginState extends State {
                             ElevatedButton(
                               child: Text(
                                 "Entrar".toUpperCase(),
-                                style: TextStyle(fontSize: 14)
+                                style: TextStyle(
+                                  fontSize: customTheme.primaryTextTheme.button.fontSize
+                                )
                               ),
                               style: ButtonStyle(
                                 backgroundColor: MaterialStateProperty.all(
-                                  Colors.black12
+                                  customTheme.buttonColor
                                 ),
                                 padding: MaterialStateProperty.all(
                                   const EdgeInsets.symmetric(vertical: 15)
@@ -121,9 +131,57 @@ class LoginState extends State {
                                   )
                                 ),
                               ),
-                              onPressed: () {
+                              onPressed: () async {
                                 if (_formKey.currentState.validate()) {
-                                  print('Teste');
+                                  if (globals.barbers.isEmpty){
+                                    var responseBarbers = await globals.request.get(url: 'http://localhost:8000/cadastros/funcionarios/');
+
+                                    responseBarbers.forEach((barber) {
+                                      Barber objbarber = Barber.fromJson(barber);
+
+                                      globals.barbers.add(objbarber);
+                                    });
+                                  }
+
+                                  if (globals.servicos.isEmpty){
+                                    var responseServicos = await globals.request.get(url: 'http://localhost:8000/cadastros/servico/?e_ativo=true');
+
+                                    responseServicos.forEach((servico) {
+                                      Servico objServico = Servico.fromJson(servico);
+
+                                      globals.servicos.add(objServico);
+                                    });
+                                  }
+
+                                  var responseUser = await globals.request.get(url: 'http://localhost:8000/cadastros/clientes/' + '?email=' + inputEmailController.text);
+
+                                  if (responseUser.isEmpty) {
+                                    dialog(context, 'Erro', 'Usuário Incorreto');
+                                  } else {
+                                    User user = await User.fromJson(responseUser.first);
+
+                                    globals.user = user;
+
+                                    var json = {
+                                      "email": user.email,
+                                      "senha": inputPWController.text
+                                    };
+
+                                    var response = await globals.request.post(url: 'http://localhost:8000/cadastros/clientes/validar-senha/', body: json);
+
+                                    Map<String, dynamic> responseAutentication = jsonDecode(response.body);
+
+                                    if(responseAutentication['mensagem'] is String){
+                                      dialog(context, 'Erro', 'Senha Incorreta');
+                                    } else {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(builder: (context) {
+                                          return Home();
+                                        }),
+                                      );
+                                    }
+                                  }
                                 }
                               }
                             )
@@ -166,7 +224,8 @@ class LoginState extends State {
                                 Text(
                                   'Criar uma conta',
                                   style: TextStyle(
-                                      color: Color.fromRGBO(45, 87, 253, 1)
+                                      color: Color.fromRGBO(45, 87, 253, 1),
+                                      fontWeight: FontWeight.bold
                                   ),
                                 ),
                               ],

@@ -25,6 +25,7 @@ class ContatoFuncionarioViewSet(viewsets.GenericViewSet, CreateModelMixin, Updat
 class ClientesViewSet(viewsets.ModelViewSet):
     queryset = models.Clientes.objects.all()
     serializer_class = serializers.ClientesSerializer
+    filterset_fields = ['id','email', 'cpf']
     
     @action(detail=False, methods=['post'])
     def validar_senha(self, request):
@@ -41,7 +42,7 @@ class ClientesViewSet(viewsets.ModelViewSet):
                 senha_correta = check_password(senha, senha_criptografada)
 
                 if senha_correta:
-                    return Response({'mensagem': 'Autenticação OK'}, status=status.HTTP_200_OK)
+                    return Response({'mensagem': True}, status=status.HTTP_200_OK)
                 else:
                     return Response({'mensagem': 'Senha incorreta.'}, status=status.HTTP_401_UNAUTHORIZED)
         else:
@@ -51,12 +52,13 @@ class ClientesViewSet(viewsets.ModelViewSet):
 class ServicoViewSet(viewsets.ModelViewSet):
     queryset = models.Servico.objects.all()
     serializer_class = serializers.ServicoSerializer
+    filterset_fields = ['id', 'e_ativo']
 
 
 class AgendamentoViewSet(viewsets.ModelViewSet):
     queryset = models.Agendamentos.objects.all()
     serializer_class = serializers.AgendamentoSerializer
-
+    filterset_fields = ['id', 'id_cliente']
 
 class ProdutosViewSet(viewsets.ModelViewSet):
     queryset = models.Produtos.objects.all()

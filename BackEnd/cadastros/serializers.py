@@ -44,6 +44,18 @@ class ClientesSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         validated_data['senha'] = make_password(validated_data['senha'])
         return super(ClientesSerializer, self).create(validated_data)
+
+    def update(self, instance, validated_data):
+        instance.nome = validated_data['nome']
+        instance.data_nascimento = validated_data['data_nascimento']
+        instance.cpf = validated_data['cpf']
+        instance.email = validated_data['email']
+        instance.telefone = validated_data['telefone']
+        instance.senha = make_password(validated_data['senha'])
+
+        instance.save()
+
+        return instance
     
     class Meta:
         model = models.Clientes

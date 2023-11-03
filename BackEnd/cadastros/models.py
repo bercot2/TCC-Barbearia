@@ -6,6 +6,8 @@ class Funcionarios(models.Model):
     nome = models.CharField()
     cpf = models.CharField(max_length=14, unique=True)
     data_nascimento = models.CharField()
+    dias_disponiveis = models.CharField()
+    horarios_disponiveis = models.CharField()
 
     class Meta:
         db_table = 'funcionarios'

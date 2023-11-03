@@ -1,10 +1,10 @@
 import 'package:barberapp/src/utils/getDeviceInfo.dart';
 import 'package:flutter/material.dart';
 
-avatar(context, [String avatarUrl]) {
+avatar(context, [AssetImage avatarUrl]) {
   if (avatarUrl != null) {
     return CircleAvatar(
-      backgroundImage: NetworkImage(avatarUrl),
+      backgroundImage: avatarUrl,
       radius: getDeviceHeight(context) * 0.06,
       backgroundColor: Colors.white,
     );
