@@ -16,6 +16,16 @@ class HomeState extends State {
     super.initState();
   }
 
+  final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey = GlobalKey<RefreshIndicatorState>();
+
+  Future<void> _refresh() async {
+    
+    await Future.delayed(Duration(seconds: 2));
+
+    // Atualize o estado para reconstruir a tela
+    setState(() {});
+  }
+
   @override
   build(BuildContext context) {
     List<Widget> cardsBarbeiros = [];
@@ -43,28 +53,34 @@ class HomeState extends State {
                             )),
               ],
             )),
-        body: Container(
-            margin: EdgeInsets.symmetric(
-                horizontal: getDeviceWidth(context) * 0.05),
-            child: Column(
-              children: [
-                Container(
-                    margin: EdgeInsets.symmetric(
-                        vertical: getDeviceHeight(context) * 0.03),
-                    alignment: Alignment.topLeft,
-                    child: Text('Cabeleireiros',
-                        style: Theme.of(context).primaryTextTheme.headline5)
-                ),
-                Container(
-                    margin: EdgeInsets.only(
-                        bottom: getDeviceHeight(context) * 0.03),
-                    alignment: Alignment.topLeft,
-                    child: Text(
-                        'Selecione um cabelereiro abaixo para agendar um atendimento:',
-                        style: Theme.of(context).primaryTextTheme.headline6)
-                ),
-                ...cardsBarbeiros
-              ],
-            )));
+        body: RefreshIndicator(
+          // Atribua a chave ao RefreshIndicator
+          key: _refreshIndicatorKey,
+          // Defina a função de recarregamento
+          onRefresh: _refresh,
+          child: Container(
+              margin: EdgeInsets.symmetric(
+                  horizontal: getDeviceWidth(context) * 0.05),
+              child: Column(
+                children: [
+                  Container(
+                      margin: EdgeInsets.symmetric(
+                          vertical: getDeviceHeight(context) * 0.03),
+                      alignment: Alignment.topLeft,
+                      child: Text('Cabeleireiros',
+                          style: Theme.of(context).primaryTextTheme.headline5)
+                  ),
+                  Container(
+                      margin: EdgeInsets.only(
+                          bottom: getDeviceHeight(context) * 0.03),
+                      alignment: Alignment.topLeft,
+                      child: Text(
+                          'Selecione um cabelereiro abaixo para agendar um atendimento:',
+                          style: Theme.of(context).primaryTextTheme.headline6)
+                  ),
+                  ...cardsBarbeiros
+                ],
+              )),
+        ));
   }
 }

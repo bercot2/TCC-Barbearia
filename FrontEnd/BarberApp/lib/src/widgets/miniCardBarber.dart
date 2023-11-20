@@ -2,7 +2,7 @@ import 'package:barberapp/src/utils/getDeviceInfo.dart';
 import 'package:barberapp/src/widgets/avatar.dart';
 import 'package:flutter/material.dart';
 
-miniCard(String title, AssetImage avatarUrl, context) {
+miniCardBarber(String title, AssetImage avatarUrl, context) {
   return Card(
     shape: OutlineInputBorder(
         borderRadius: BorderRadius.circular(10.0), borderSide: BorderSide.none),

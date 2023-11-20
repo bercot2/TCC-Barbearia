@@ -1,4 +1,5 @@
 import 'package:barberapp/src/screens/ScheduleList.dart';
+import 'package:barberapp/src/screens/ServicesList.dart';
 import 'package:barberapp/src/screens/login.dart';
 import 'package:barberapp/src/themes/theme.dart';
 import 'package:barberapp/src/utils/getDeviceInfo.dart';
@@ -23,6 +24,15 @@ Widget sideMenu(context) {
               child: appLogo,
             ),
           ),
+        ),
+        ListTile(
+          title: drawerItem('Servicos', Icons.attach_money_outlined, context),
+          onTap: () {
+            Navigator.pop(context);
+            Navigator.push(context, MaterialPageRoute(builder: (context) {
+              return new ServicesList();
+            }));
+          },
         ),
         ListTile(
           title: drawerItem('Agendamentos', Icons.calendar_today, context),

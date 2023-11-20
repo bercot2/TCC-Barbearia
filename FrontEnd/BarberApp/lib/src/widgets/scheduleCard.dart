@@ -21,7 +21,7 @@ Widget scheduleCard(Agendamentos agendamento, context) {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text('Nº ${agendamento.id}', style: TextStyle(color: Colors.white)),
-            Text('Dia: ${agendamento.dataHoraAgendamento.day} ás ${agendamento.dataHoraAgendamento.hour}:${agendamento.dataHoraAgendamento.minute}',
+            Text('Dia: ${agendamento.dataHoraAgendamento.day} às ${agendamento.dataHoraAgendamento.hour}:${agendamento.dataHoraAgendamento.minute}',
                 style: TextStyle(color: Colors.white)),
           ],
         ),

@@ -50,7 +50,7 @@ class ClientesViewSet(viewsets.ModelViewSet):
         
         
 class ServicoViewSet(viewsets.ModelViewSet):
-    queryset = models.Servico.objects.all()
+    queryset = models.Servico.objects.all().order_by('descricao')
     serializer_class = serializers.ServicoSerializer
     filterset_fields = ['id', 'e_ativo']
 

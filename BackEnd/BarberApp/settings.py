@@ -64,7 +64,7 @@ MIDDLEWARE = [
 ]
 
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5555",  
+    "http://localhost:5555", 
 ]
 
 CORS_ALLOW_HEADERS = [
