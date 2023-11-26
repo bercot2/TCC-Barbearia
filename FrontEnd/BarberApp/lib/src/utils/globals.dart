@@ -11,6 +11,3 @@ APIConsumer request = APIConsumer();
 User user;
 List<Barber> barbers = [];
 List<Servico> servicos = [];
-
-dynamic tempTime;
-dynamic tempDate;

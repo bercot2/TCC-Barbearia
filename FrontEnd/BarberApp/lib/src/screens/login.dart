@@ -25,7 +25,7 @@ class LoginState extends State {
   Widget build(BuildContext context) {
     return Scaffold(
         resizeToAvoidBottomInset: false,
-        backgroundColor: Colors.black38, //Theme.of(context).backgroundColor,
+        backgroundColor: Colors.blueGrey[50],
         body: Container(
             child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
@@ -36,7 +36,8 @@ class LoginState extends State {
               child: appLogo,
             ),
             Text('Faça seu login',
-                style: Theme.of(context).primaryTextTheme.headline6),
+              style: Theme.of(context).primaryTextTheme.headline6.copyWith(color: Colors.black)
+            ),
             Container(
               margin: EdgeInsets.symmetric(horizontal: 45, vertical: 10),
               child: Form(

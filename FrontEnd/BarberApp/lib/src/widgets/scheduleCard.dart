@@ -3,6 +3,7 @@ import 'package:barberapp/src/screens/ScheduleEdit.dart';
 import 'package:barberapp/src/themes/theme.dart';
 import 'package:barberapp/src/widgets/alertDialog.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 Widget scheduleCard(Agendamentos agendamento, context) {
   return Card(
@@ -21,8 +22,8 @@ Widget scheduleCard(Agendamentos agendamento, context) {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text('Nº ${agendamento.id}', style: TextStyle(color: Colors.white)),
-            Text('Dia: ${agendamento.dataHoraAgendamento.day} às ${agendamento.dataHoraAgendamento.hour}:${agendamento.dataHoraAgendamento.minute}',
-                style: TextStyle(color: Colors.white)),
+            Text('Dia: ${DateFormat('d/M').format(agendamento.dataHoraAgendamento)} às ${DateFormat.Hm().format(agendamento.dataHoraAgendamento)}', style: TextStyle(color: Colors.white)),
+            Text('Serviço: ${agendamento.servico.descricao}', style: TextStyle(color: Colors.white))
           ],
         ),
         subtitle: Text('Com: ${agendamento.barber.nome}',

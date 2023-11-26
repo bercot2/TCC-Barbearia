@@ -1,12 +1,9 @@
-import traceback
-
-from datetime import datetime
+from datetime import timedelta
 from django.contrib.auth.hashers import check_password
-from django.db.models import Q
+from django.db import connection
 from rest_framework import status
 from rest_framework import viewsets
-from rest_framework.viewsets import ModelViewSet
-from rest_framework.decorators import api_view, action
+from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.mixins import CreateModelMixin, UpdateModelMixin
 from . import models, serializers
@@ -63,3 +60,48 @@ class AgendamentoViewSet(viewsets.ModelViewSet):
 class ProdutosViewSet(viewsets.ModelViewSet):
     queryset = models.Produtos.objects.all()
     serializer_class = serializers.ProdutosSerializer
+
+class HorariosDisponiveisViewSet(viewsets.ReadOnlyModelViewSet):
+
+    def list(self, request):
+        id_funcionario = self.request.query_params.get('id_funcionario')
+        data_agendamento = self.request.query_params.get('data_agendamento')
+
+        query = f"""
+            WITH HorariosDisponiveis AS (
+                SELECT 
+                    generate_series(
+                        ('{data_agendamento}' || ' ' || hora_inicio)::timestamp,
+                        ('{data_agendamento}' || ' ' || hora_final)::timestamp,
+                        interval '30 minutes'
+                    ) AS horario
+                FROM funcionarios
+                WHERE id = {id_funcionario}
+            ),
+            AgendamentosOcupados AS (
+                SELECT 
+                    (data_hora_agendamento)::timestamp AS horario_agendado,
+                    (data_hora_agendamento + (servico.tempo_servico || ' minutes')::interval)::timestamp AS horario_fim
+                FROM agendamentos
+                INNER JOIN servico ON agendamentos.id_servico = servico.id
+                WHERE id_funcionario = {id_funcionario} and to_char(agendamentos.data_hora_agendamento, 'YYYY-MM-DD') = '{data_agendamento}'
+            )
+            SELECT 
+                TO_CHAR(horario, 'HH24:MI') AS horario_formatado
+            FROM HorariosDisponiveis
+            WHERE NOT EXISTS (
+                SELECT 1
+                FROM AgendamentosOcupados
+                WHERE HorariosDisponiveis.horario >= AgendamentosOcupados.horario_agendado
+                AND HorariosDisponiveis.horario < AgendamentosOcupados.horario_fim
+            );
+        """
+
+        with connection.cursor() as cursor:
+            cursor.execute(query)
+            resultados = cursor.fetchall()
+
+        # Converta os resultados para um formato adequado para JSON, se necessário
+        horarios_disponiveis = [resultado[0] for resultado in resultados]
+
+        return Response(horarios_disponiveis)

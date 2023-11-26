@@ -26,7 +26,7 @@ Widget sideMenu(context) {
           ),
         ),
         ListTile(
-          title: drawerItem('Servicos', Icons.attach_money_outlined, context),
+          title: drawerItem('Serviços', Icons.content_cut_outlined, context),
           onTap: () {
             Navigator.pop(context);
             Navigator.push(context, MaterialPageRoute(builder: (context) {
@@ -35,13 +35,20 @@ Widget sideMenu(context) {
           },
         ),
         ListTile(
-          title: drawerItem('Agendamentos', Icons.calendar_today, context),
+          title: drawerItem('Meus Horários', Icons.calendar_today, context),
           onTap: () {
             Navigator.pop(context);
             Navigator.push(context, MaterialPageRoute(builder: (context) {
               return new ScheduleList();
             }));
           },
+        ),
+        ListTile(
+          title: drawerItem('Meus Dados', Icons.account_circle_outlined, context),
+          onTap: () {
+            Navigator.of(context).pop();
+            aboutDialog(context);
+          }
         ),
         ListTile(
           title: drawerItem('Sobre', Icons.info_outline, context),

@@ -1,11 +1,15 @@
+import 'package:barberapp/src/model/Agendamentos.dart';
 import 'package:barberapp/src/model/Barber.dart';
 import 'package:barberapp/src/model/Servico.dart';
+import 'package:barberapp/src/screens/home.dart';
 import 'package:barberapp/src/utils/formatString.dart';
 import 'package:barberapp/src/utils/getDeviceInfo.dart';
 import 'package:barberapp/src/utils/showImageUser.dart';
+import 'package:barberapp/src/widgets/dialog.dart';
 import 'package:barberapp/src/widgets/miniCardBarber.dart';
 import 'package:barberapp/src/widgets/miniCardService.dart';
 import 'package:flutter/material.dart';
+import '../utils/globals.dart' as globals;
 
 class SchedulePage extends StatefulWidget {
   Barber barberInfo;
@@ -18,31 +22,57 @@ class SchedulePage extends StatefulWidget {
 }
 
 class ScheduleState extends State<SchedulePage> {
+
   Barber barberInfo;
+  Servico serviceSelected = null;
+
+  List<TimeOfDay> timeSlots = [];
+  DateTime selectedDate = DateTime.now();
+  TimeOfDay selectedTime = null;
+
+  @override
+  void initState() {
+    super.initState();
+    initializeData();
+  }
 
   ScheduleState(Barber barber) {
     this.barberInfo = barber;
   }
 
-  List<TimeOfDay> timeSlots = generateTimeSlots();
+  Future<void> initializeData() async {
+    barberInfo = widget.barberInfo;
+    selectedDate = DateTime.now();
 
-  static List<TimeOfDay> generateTimeSlots() {
-    List<TimeOfDay> timeSlots = [];
-    for (int hour = 9; hour <= 20; hour++) {
-      for (int minute = 0; minute < 60; minute += 30) {
-        timeSlots.add(TimeOfDay(hour: hour, minute: minute));
+    final result = await horariosAgendamentos(barberInfo.id);
 
-        if (hour == 20){
-          break;
-        }
-      }
-    }
-    return timeSlots;
+    setState(() {
+      timeSlots = result;
+    });
   }
 
-  Servico serviceSelected = null;
-  DateTime selectedDate = DateTime.now();
-  TimeOfDay selectedTime = TimeOfDay.now();
+  Future<List<TimeOfDay>> horariosAgendamentos(int idBarber) async  {
+    List<TimeOfDay> timeSlots = [];
+
+    String date = '${this.selectedDate.year}-${this.selectedDate.month}-${this.selectedDate.day}';
+    
+    var responseHorarios = await globals.request.get(url: 'http://localhost:8000/cadastros/horarios-disponiveis/?id_funcionario=$idBarber&data_agendamento=$date');
+
+    if (responseHorarios != null && responseHorarios.isNotEmpty) {
+      responseHorarios.forEach((horario) {
+        int hour, minute;
+
+        List<String> time = horario.toString().split(':');
+        
+        hour = int.parse(time[0]);
+        minute = int.parse(time[1]);
+
+        timeSlots.add(TimeOfDay(hour: hour, minute: minute));
+      });
+    }
+
+    return timeSlots;
+  }
 
   selectDate(BuildContext context) async {
 
@@ -67,6 +97,13 @@ class ScheduleState extends State<SchedulePage> {
     if (picked != null && picked != selectedDate)
       setState(() {
         selectedDate = picked;
+        selectedTime = null;
+
+        horariosAgendamentos(this.barberInfo.id).then((result) {
+          setState(() {
+            timeSlots = result;
+          });
+        });
       });
   }
 
@@ -134,7 +171,7 @@ class ScheduleState extends State<SchedulePage> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(
-                                  formatDate(selectedDate),
+                                  formatDate(selectedDate ?? DateTime.now()),
                                   style: Theme.of(context).primaryTextTheme.headline6,
                                 ),
                                 RaisedButton(
@@ -192,7 +229,6 @@ class ScheduleState extends State<SchedulePage> {
                                     setState(() {
                                       selectedTime = time;
                                     });
-                                    print("Selected time: $selectedTime");
                                   },
                                   child: Container(
                                     decoration: BoxDecoration(
@@ -226,8 +262,41 @@ class ScheduleState extends State<SchedulePage> {
                           borderRadius: BorderRadius.circular(12.0),
                           borderSide: BorderSide.none,
                         ),
-                        onPressed: () {
-                          print('teeeste');
+                        onPressed: () async {
+                          if (serviceSelected == null){
+                            dialog(context, "Aviso", "Selecione um Serviço!");
+
+                            return;
+                          }
+
+                          if (selectedTime == null){
+                            dialog(context, "Aviso", "Selecione um Horário!");
+
+                            return;
+                          }
+
+                          DateTime dataAgendada = DateTime(
+                            this.selectedDate.year,
+                            this.selectedDate.month,
+                            this.selectedDate.day,
+                            this.selectedTime.hour,
+                            this.selectedTime.minute
+                          );
+
+                          Agendamentos agendamento = new Agendamentos(dataHoraAgendamento: dataAgendada, barber: this.barberInfo, servico: this.serviceSelected);
+
+                          if (await agendamento.postAgendamento()) {
+                            dialog(context, "Aviso", "Agendamento Realizado!", onPressed: (){
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) {
+                                    return Home();
+                                  }),
+                              );
+                            });
+                          } else {
+                            dialog(context, "Erro", "Ocorreu algum Erro, tente novamente!");
+                          }
                         },
                         child: Text(
                           'Concluir agendamento',

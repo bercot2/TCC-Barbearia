@@ -1,10 +1,12 @@
 import 'package:barberapp/src/model/Barber.dart';
 import 'package:barberapp/src/model/Servico.dart';
+import 'package:intl/intl.dart';
+import 'dart:convert';
 import '../utils/globals.dart' as globals;
 
 class Agendamentos {
   
-  final int id;
+  int id;
   final DateTime dataHoraAgendamento;
   final Barber barber;
   final Servico servico;
@@ -24,5 +26,27 @@ class Agendamentos {
     );
 
     return user;
+  }
+
+  postAgendamento() async {
+    Map<String, dynamic> json = {
+        "data_hora_agendamento": DateFormat("yyyy-MM-ddTHH:mm:ss'Z'").format(this.dataHoraAgendamento),
+        "id_cliente": globals.user.id,
+        "id_funcionario": this.barber.id,
+        "id_servico": this.servico.id
+    };
+
+    var responsePost = await globals.request.post(url: "http://localhost:8000/cadastros/agendamento/", body: json);
+
+    if (responsePost.body.isNotEmpty) {
+
+      this.id = jsonDecode(responsePost.body)["id"];
+
+      globals.user.agendamentos.add(this);
+
+      return true;
+    }
+
+    return false;
   }
 }

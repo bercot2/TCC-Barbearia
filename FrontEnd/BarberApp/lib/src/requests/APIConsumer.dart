@@ -44,5 +44,5 @@ class APIConsumer{
     } on Exception catch(e){
       print(e);
     }
-  }
+    }
 }

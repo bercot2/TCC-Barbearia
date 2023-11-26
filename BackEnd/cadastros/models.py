@@ -8,6 +8,8 @@ class Funcionarios(models.Model):
     data_nascimento = models.CharField()
     dias_disponiveis = models.CharField()
     horarios_disponiveis = models.CharField()
+    hora_inicio = models.TimeField()
+    hora_final = models.TimeField()
 
     class Meta:
         db_table = 'funcionarios'
@@ -37,6 +39,7 @@ class Servico(models.Model):
     descricao = models.CharField()
     valor = models.FloatField()
     e_ativo = models.BooleanField()
+    tempo_servico = models.TimeField()
 
     class Meta:
         db_table = 'servico'
