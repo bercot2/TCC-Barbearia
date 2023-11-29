@@ -22,7 +22,7 @@ Widget scheduleCard(Agendamentos agendamento, context) {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text('Nº ${agendamento.id}', style: TextStyle(color: Colors.white)),
-            Text('Dia: ${DateFormat('d/M').format(agendamento.dataHoraAgendamento)} às ${DateFormat.Hm().format(agendamento.dataHoraAgendamento)}', style: TextStyle(color: Colors.white)),
+            Text('Dia: ${DateFormat('d/M').format(agendamento.dataHoraAgendamento)} às ${DateFormat.Hm().format(agendamento.dataHoraAgendamento.toLocal())}', style: TextStyle(color: Colors.white)),
             Text('Serviço: ${agendamento.servico.descricao}', style: TextStyle(color: Colors.white))
           ],
         ),

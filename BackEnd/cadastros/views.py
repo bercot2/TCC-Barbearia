@@ -1,5 +1,5 @@
-from datetime import timedelta
 from django.contrib.auth.hashers import check_password
+from django.utils import timezone
 from django.db import connection
 from rest_framework import status
 from rest_framework import viewsets
@@ -64,8 +64,16 @@ class ProdutosViewSet(viewsets.ModelViewSet):
 class HorariosDisponiveisViewSet(viewsets.ReadOnlyModelViewSet):
 
     def list(self, request):
+        id_agendamento = self.request.query_params.get('id_agendamento')
         id_funcionario = self.request.query_params.get('id_funcionario')
         data_agendamento = self.request.query_params.get('data_agendamento')
+
+        ignore_agendamento = ''
+
+        current_time = timezone.localtime(timezone.now())
+
+        if id_agendamento:
+            ignore_agendamento = f'and agendamentos.id != {id_agendamento}'
 
         query = f"""
             WITH HorariosDisponiveis AS (
@@ -85,23 +93,25 @@ class HorariosDisponiveisViewSet(viewsets.ReadOnlyModelViewSet):
                 FROM agendamentos
                 INNER JOIN servico ON agendamentos.id_servico = servico.id
                 WHERE id_funcionario = {id_funcionario} and to_char(agendamentos.data_hora_agendamento, 'YYYY-MM-DD') = '{data_agendamento}'
+                {ignore_agendamento}
             )
             SELECT 
-                TO_CHAR(horario, 'HH24:MI') AS horario_formatado
+                TO_CHAR(horario, 'HH24:MI') AS horario_formatado,
+                CURRENT_TIMESTAMP
             FROM HorariosDisponiveis
             WHERE NOT EXISTS (
                 SELECT 1
                 FROM AgendamentosOcupados
                 WHERE HorariosDisponiveis.horario >= AgendamentosOcupados.horario_agendado
                 AND HorariosDisponiveis.horario < AgendamentosOcupados.horario_fim
-            );
+            )
+            AND HorariosDisponiveis.horario >= '{current_time.strftime('%Y-%m-%d %H:%M:%S')}';
         """
 
         with connection.cursor() as cursor:
             cursor.execute(query)
             resultados = cursor.fetchall()
 
-        # Converta os resultados para um formato adequado para JSON, se necessário
         horarios_disponiveis = [resultado[0] for resultado in resultados]
 
         return Response(horarios_disponiveis)

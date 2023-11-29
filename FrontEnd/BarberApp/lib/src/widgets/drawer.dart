@@ -1,6 +1,7 @@
 import 'package:barberapp/src/screens/ScheduleList.dart';
 import 'package:barberapp/src/screens/ServicesList.dart';
 import 'package:barberapp/src/screens/login.dart';
+import 'package:barberapp/src/screens/userData.dart';
 import 'package:barberapp/src/themes/theme.dart';
 import 'package:barberapp/src/utils/getDeviceInfo.dart';
 import 'package:barberapp/src/widgets/aboutDialog.dart';
@@ -46,8 +47,10 @@ Widget sideMenu(context) {
         ListTile(
           title: drawerItem('Meus Dados', Icons.account_circle_outlined, context),
           onTap: () {
-            Navigator.of(context).pop();
-            aboutDialog(context);
+            Navigator.pop(context);
+            Navigator.push(context, MaterialPageRoute(builder: (context) {
+              return new UserDataScreen();
+            }));
           }
         ),
         ListTile(

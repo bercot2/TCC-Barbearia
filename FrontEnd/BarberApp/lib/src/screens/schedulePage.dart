@@ -51,7 +51,7 @@ class ScheduleState extends State<SchedulePage> {
     });
   }
 
-  Future<List<TimeOfDay>> horariosAgendamentos(int idBarber) async  {
+  Future<List<TimeOfDay>> horariosAgendamentos(int idBarber) async {
     List<TimeOfDay> timeSlots = [];
 
     String date = '${this.selectedDate.year}-${this.selectedDate.month}-${this.selectedDate.day}';
