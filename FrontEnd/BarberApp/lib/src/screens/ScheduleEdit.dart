@@ -8,6 +8,7 @@ import 'package:barberapp/src/widgets/dialog.dart';
 import 'package:barberapp/src/widgets/miniCardBarber.dart';
 import 'package:barberapp/src/widgets/miniCardService.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import '../utils/globals.dart' as globals;
 
 class ScheduleEdit extends StatefulWidget {
@@ -54,7 +55,7 @@ class ScheduleEditState extends State<ScheduleEdit> {
   Future<List<TimeOfDay>> horariosAgendamentos(int idBarber) async {
     List<TimeOfDay> timeSlots = [];
 
-    String date = '${this.selectedDate.year}-${this.selectedDate.month}-${this.selectedDate.day}';
+    String date = DateFormat('yyyy-MM-dd').format(this.selectedDate).toString();
     
     var responseHorarios = await globals.request.get(url: 'http://localhost:8000/cadastros/horarios-disponiveis/?id_agendamento=${this.agendamento.id}&id_funcionario=$idBarber&data_agendamento=$date');
 
